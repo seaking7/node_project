@@ -14,11 +14,12 @@
   position: relative;
   overflow: hidden;
 }
-/* ! */
+/* !8000px로 넓게 li를 붙여서 나열 */
 .slider-wrap ul.slider {
-  width: 8000px;
+  width: 100%;
   height: 100%;
   position: absolute;
+  left: 0px;
 }
 /* ! */
 .slider-wrap ul.slider li {
