@@ -1,0 +1,1 @@
+{"version":3,"file":"style.css","mappings":"AAAA,EACI,SACJ,CAEA,IACI,UACJ","sources":["webpack://keyboard/./src/css/style.css"],"sourcesContent":["p{\n    color: red\n}\n\ndiv {\n    width: 100%\n}"],"names":[],"sourceRoot":""}
