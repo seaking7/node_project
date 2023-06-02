@@ -5,6 +5,10 @@ export default class ImageSlider {
 
   #sliderWidth = 0;
 
+  #intervalId;
+
+  #IsAuthplay = true;
+
   sliderWrapEl;
 
   slierListEl;
@@ -15,6 +19,8 @@ export default class ImageSlider {
 
   indicatorWrapEl;
 
+  controlWrapEl;
+
   constructor() {
     this.assignElement();
     this.initSliderNumber();
@@ -23,6 +29,7 @@ export default class ImageSlider {
     this.addEvent();
     this.createIndicator();
     this.setIndicator();
+    this.initAutoplay();
   }
 
   assignElement() {
@@ -31,6 +38,11 @@ export default class ImageSlider {
     this.nextBtnEl = this.sliderWrapEl.querySelector('#next');
     this.previousBtnEl = this.sliderWrapEl.querySelector('#previous');
     this.indicatorWrapEl = this.sliderWrapEl.querySelector('#indicator-wrap');
+    this.controlWrapEl = this.sliderWrapEl.querySelector('#control-wrap');
+  }
+
+  initAutoplay() {
+    this.#intervalId = setInterval(this.moveToRight.bind(this), 1000);
   }
 
   initSliderNumber() {
@@ -54,6 +66,21 @@ export default class ImageSlider {
       'click',
       this.onClickIndicator.bind(this),
     );
+    this.controlWrapEl.addEventListener('click', this.togglePlay.bind(this));
+  }
+
+  togglePlay(event) {
+    if (event.target.dataset.status === 'play') {
+      this.#IsAuthplay = true;
+      this.controlWrapEl.classList.add('play');
+      this.controlWrapEl.classList.remove('pause');
+      this.initAutoplay();
+    } else if (event.target.dataset.status === 'pause') {
+      this.#IsAuthplay = false;
+      this.controlWrapEl.classList.remove('play');
+      this.controlWrapEl.classList.add('pause');
+      clearInterval(this.#intervalId);
+    }
   }
 
   onClickIndicator(event) {
@@ -64,6 +91,11 @@ export default class ImageSlider {
         this.#sliderWidth * this.#currentPosition
       }px`;
     }
+    if (this.#IsAuthplay) {
+      clearInterval(this.#intervalId);
+      this.#intervalId = setInterval(this.moveToRight.bind(this), 1000);
+    }
+
     this.setIndicator();
   }
 
@@ -75,6 +107,11 @@ export default class ImageSlider {
     this.sliderListEl.style.left = `-${
       this.#sliderWidth * this.#currentPosition
     }px`;
+    if (this.#IsAuthplay) {
+      clearInterval(this.#intervalId);
+      this.#intervalId = setInterval(this.moveToRight.bind(this), 1000);
+    }
+
     this.setIndicator();
   }
 
@@ -86,6 +123,10 @@ export default class ImageSlider {
     this.sliderListEl.style.left = `-${
       this.#sliderWidth * this.#currentPosition
     }px`;
+    if (this.#IsAuthplay) {
+      clearInterval(this.#intervalId);
+      this.#intervalId = setInterval(this.moveToRight.bind(this), 1000);
+    }
     this.setIndicator();
   }
 
