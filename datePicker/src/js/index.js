@@ -41,7 +41,18 @@ class DatePicker{
         this.initCalenderDate();
         this.assignElement();
 
+        this.initSelectedDate();
+        this.setDateInput();
         this.addEvent();
+    }
+
+    initSelectedDate(){
+        this.selectedDate = {...this.#calenderDate };
+    }
+
+    setDateInput() {
+        this.dateInputEl.textContent = this.formatDate(this.selectedDate.data);
+        this.dateInputEl.dataset.value = this.selectedDate.data;
     }
 
     initCalenderDate(){
@@ -74,9 +85,68 @@ class DatePicker{
 
     addEvent() {
         this.dateInputEl.addEventListener("click", this.toggleCalender.bind(this));
+        this.nextBtnEl.addEventListener("click", this.moveToNextMonth.bind(this));
+        this.prevBtnEl.addEventListener("click", this.moveToPrevMonth.bind(this));
+        this.calenderDatesEl.addEventListener("click", this.onClickSelectDate.bind(this));
+    }
+
+    onClickSelectDate(event){
+        const eventTarget = event.target;
+        if( eventTarget.dataset.date) {
+            console.log(eventTarget);
+            this.calenderDatesEl.querySelector(".selected")?.classList.remove('selected');
+            eventTarget.classList.add('selected');
+            this.selectedDate = {
+                data: new Date(this.#calenderDate.year, this.#calenderDate.month, eventTarget.dataset.date),
+                year: this.#calenderDate.year,
+                month: this.#calenderDate.month,
+                date: eventTarget.dataset.date
+            };
+            this.setDateInput();
+            this.calenderEl.classList.remove('active');
+        }
+
+    }
+
+    formatDate(selectedDate) {
+        let date = selectedDate.getDate();
+        if( date < 10 ) date = `0${date}`
+
+        let month = selectedDate.getMonth() + 1;
+        if(month < 10) month = `0${month}`;
+
+        let year = selectedDate.getFullYear();
+
+        return `${year}/${month}/${date}`
+    }
+
+
+
+    moveToPrevMonth() {
+        this.#calenderDate.month--;
+        if(this.#calenderDate.month < 0){
+            this.#calenderDate.month = 11;
+            this.#calenderDate.year--;
+        }
+        this.updateMonth();
+        this.updateDates();
+    }
+
+
+    moveToNextMonth() {
+        this.#calenderDate.month++;
+        if(this.#calenderDate.month > 11){
+            this.#calenderDate.month = 0;
+            this.#calenderDate.year++;
+        }
+        this.updateMonth();
+        this.updateDates();
     }
 
     toggleCalender() {
+        if(this.calenderEl.classList.contains('active')){
+            this.#calenderDate = { ...this.selectedDate };
+        }
         this.calenderEl.classList.toggle('active');
         this.updateMonth();
         this.updateDates();
@@ -102,7 +172,25 @@ class DatePicker{
         this.calenderDatesEl.appendChild(fragment);
         this.colorSaturday();
         this.colorSunday();
-    
+        this.markToday();
+        this.markSelectedDate();
+    }
+
+    markSelectedDate() {
+        if(this.selectedDate.year === this.#calenderDate.year &&
+            this.selectedDate.month === this.#calenderDate.month ){
+                this.calenderDatesEl.querySelector(`[data-date='${this.selectedDate.date}']`).classList.add("selected");
+            }
+    }
+
+    markToday(){
+        const currentDate = new Date();
+        const currentMonth = currentDate.getMonth();
+        const currentYear = currentDate.getFullYear();
+        const today = currentDate.getDate();
+        if(currentYear === this.#calenderDate.year && currentMonth === this.#calenderDate.month) {
+            this.calenderDatesEl.querySelector(`[data-date='${today}']`).classList.add('today');
+        }
     }
 
     colorSaturday(){
