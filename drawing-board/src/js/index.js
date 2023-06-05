@@ -1,4 +1,3 @@
-console.log('hi')
 
 class DrawingBoard{
     MODE = "NONE";
@@ -29,6 +28,8 @@ class DrawingBoard{
         this.navigatorImageContainerEl = this.containerEl.querySelector("#imgNav");
         this.navigatorImageEl = this.navigatorImageContainerEl.querySelector("#canvasImg");
         this.undoEl = this.toolbarEl.querySelector("#undo");
+        this.clearEl = this.toolbarEl.querySelector("#clear");
+        this.downloadLinkEl = this.toolbarEl.querySelector("#download");
 
     }
 
@@ -52,7 +53,20 @@ class DrawingBoard{
         this.eraserEl.addEventListener("click", this.onClickEraser.bind(this));
         this.navigatorEl.addEventListener("click", this.onClickNavigator.bind(this));
         this.undoEl.addEventListener("click", this.onClickUndo.bind(this));
-        
+        this.clearEl.addEventListener("click", this.onClickClear.bind(this));
+        this.downloadLinkEl.addEventListener("click", this.onClickDownload.bind(this));
+    }
+
+    onClickDownload(){
+        this.downloadLinkEl.href = this.canvasEl.toDataURL("image/jpeg", 1);
+        this.downloadLinkEl.download = "example.jpeg";
+    }
+
+    onClickClear() {
+        this.context.clearRect(0, 0, this.canvasEl.width, this.canvasEl.height);
+        this.undoArray = [];
+        this.updateNavigator();
+        this.initCanvasBackgroundColor();
     }
 
     onClickUndo() {
