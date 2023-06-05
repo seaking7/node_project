@@ -5,6 +5,8 @@ class DrawingBoard{
     IsMouseDown = false;
     errserColor = "#FFFFFF";
     backgroundColor = "#FFFFFF";
+    isNavigatorVisible = false;
+    undoArray = [];
     constructor() {
         this.assignElement();
         this.initContext();
@@ -26,6 +28,7 @@ class DrawingBoard{
         this.navigatorEl = this.toolbarEl.querySelector("#navigator");
         this.navigatorImageContainerEl = this.containerEl.querySelector("#imgNav");
         this.navigatorImageEl = this.navigatorImageContainerEl.querySelector("#canvasImg");
+        this.undoEl = this.toolbarEl.querySelector("#undo");
 
     }
 
@@ -48,16 +51,44 @@ class DrawingBoard{
         this.colorPickerEl.addEventListener("input", this.onChangeColor.bind(this));
         this.eraserEl.addEventListener("click", this.onClickEraser.bind(this));
         this.navigatorEl.addEventListener("click", this.onClickNavigator.bind(this));
+        this.undoEl.addEventListener("click", this.onClickUndo.bind(this));
         
     }
 
+    onClickUndo() {
+        if(this.undoArray.length === 0 ) {
+            alert("더이상 취소 실행 불가");
+            return;
+        } 
+        let previousDataUrl = this.undoArray.pop();
+        let previousImage = new Image();
+        previousImage.onload = () => {
+            this.context.clearRect(0, 0, this.canvasEl.width, this.canvasEl.height);
+            this.context.drawImage(previousImage, 0, 0, this.canvasEl.width, this.canvasEl.height,
+                0, 0, this.canvasEl.width, this.canvasEl.height);
+        }
+
+        previousImage.src = previousDataUrl;
+
+    }
+
+    saveState(){
+        if(this.undoArray.length > 5) {
+            this.undoArray.shift();
+        }
+        this.undoArray.push(this.canvasEl.toDataURL());
+        console.log(this.undoArray);
+    }
+
     onClickNavigator(event) {
+        this.isNavigatorVisible = !event.currentTarget.classList.contains("active");
         event.currentTarget.classList.toggle("active");
         this.navigatorImageContainerEl.classList.toggle("hide");
         this.updateNavigator();
     }
 
     updateNavigator() {
+        if(!this.isNavigatorVisible) return;
         this.navigatorImageEl.src = this.canvasEl.toDataURL();
     }
 
@@ -100,6 +131,7 @@ class DrawingBoard{
         // this.context.lineTo(400, 400);
         // this.context.stroke();
 
+        this.saveState();
     }
 
     onMouseUp(event) {
