@@ -1,0 +1,4 @@
+/node-modules
+/build
+/dist
+snowpack.config.js

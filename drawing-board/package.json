@@ -1,0 +1,25 @@
+{
+  "name": "drawing-board",
+  "version": "1.0.0",
+  "description": "",
+  "source": "index.html",
+  "scripts": {
+    "start": "parcel",
+    "build": "parcel build --public-url ./",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@parcel/transformer-sass": "^2.9.1",
+    "eslint": "^8.42.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "parcel": "^2.9.1",
+    "prettier": "2.8.8"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.4.0"
+  }
+}
