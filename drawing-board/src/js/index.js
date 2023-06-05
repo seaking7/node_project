@@ -23,6 +23,9 @@ class DrawingBoard{
         this.brushSliderEl = this.brushPanelEl.querySelector("#brushSize");
         this.brushSizePreviewEl = this.brushPanelEl.querySelector("#brushSizePreview");
         this.eraserEl = this.toolbarEl.querySelector("#eraser");
+        this.navigatorEl = this.toolbarEl.querySelector("#navigator");
+        this.navigatorImageContainerEl = this.containerEl.querySelector("#imgNav");
+        this.navigatorImageEl = this.navigatorImageContainerEl.querySelector("#canvasImg");
 
     }
 
@@ -44,6 +47,18 @@ class DrawingBoard{
         this.brushSliderEl.addEventListener("input", this.onChangeBrushSize.bind(this));
         this.colorPickerEl.addEventListener("input", this.onChangeColor.bind(this));
         this.eraserEl.addEventListener("click", this.onClickEraser.bind(this));
+        this.navigatorEl.addEventListener("click", this.onClickNavigator.bind(this));
+        
+    }
+
+    onClickNavigator(event) {
+        event.currentTarget.classList.toggle("active");
+        this.navigatorImageContainerEl.classList.toggle("hide");
+        this.updateNavigator();
+    }
+
+    updateNavigator() {
+        this.navigatorImageEl.src = this.canvasEl.toDataURL();
     }
 
     onClickEraser(){
@@ -90,11 +105,13 @@ class DrawingBoard{
     onMouseUp(event) {
         if(this.MODE === "NONE") return;
         this.IsMouseDown = false;
+        this.updateNavigator();
     }
 
     onMouseOut(){
         if(this.MODE === "NONE") return;
         this.IsMouseDown = false;
+        this.updateNavigator();
     }
 
     onMouseMove(event) {
