@@ -1,6 +1,45 @@
 import '@fortawesome/fontawesome-free/js/all.min.js';
 import "../scss/style.scss";
 
+class Router {
+    routes = [];
+    notFoundCallback = () => {};
+    addRoute(url, callback) {
+        this.routes.push({
+            url, callback, 
+        });
+        return this;
+    }
+
+    checkRoutes() {
+        const currentRoute = this.routes.find(
+            (route) => route.url === window.location.hash,
+        );
+
+        if(!currentRoute) {
+            this.notFoundCallback();
+            return;
+        }
+        currentRoute.callback();
+    }
+
+    init() {
+        window.addEventListener('hashchange', this.checkRoutes.bind(this));
+        if(!window.location.hash) {
+            window.location.hash = '#/';
+        }
+        this.checkRoutes();
+    }
+
+    setNotFound(callback) {
+        this.notFoundCallback = callback;
+        return this;
+
+    }
+
+}
+
+
 class TodoList{
 
     constructor(){
@@ -38,7 +77,8 @@ class TodoList{
 
     onClickRadioBtn(event) {
         const { value } = event.target;
-        this.filterTodo(value);
+        // this.filterTodo(value);
+        window.location.href = `#/${value.toLowerCase()}`;
 
     }
 
@@ -157,5 +197,16 @@ class TodoList{
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    const router = new Router();
     const todoList = new TodoList();
+    const routeCallback = (status) => () =>  {
+        todoList.filterTodo(status);
+        document.querySelector(`input[type='radio'][value='${status}']`).checked = true;
+    }
+    router.addRoute('#/all', routeCallback('ALL'))
+    .addRoute('#/done', routeCallback('DONE'))
+    .addRoute('#/todo', routeCallback('TODO'))
+    .setNotFound(routeCallback('ALL'))
+    .init();
+    
 })
