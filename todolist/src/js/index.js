@@ -17,14 +17,46 @@ class TodoList{
 
         this.todoContainerEl = document.getElementById("todo-container");
         this.todoListEl = this.todoContainerEl.querySelector("#todo-list");
-        
 
+        this.radioAreaEl = this.inputContainerEl.querySelector("#radio-area");
+        this.filterRadioEls = this.radioAreaEl.querySelectorAll('input[name="filter"]');
+        
     }
 
     addEvent() {
 
         this.addBtnEl.addEventListener("click", this.onClickAddBtn.bind(this));
         this.todoListEl.addEventListener("click", this.onClickTodoList.bind(this));
+        this.addRadioBtnEvent();
+    }
+
+    addRadioBtnEvent(){
+        for( const filterRadioBtnEl of this.filterRadioEls) {
+            filterRadioBtnEl.addEventListener('click', this.onClickRadioBtn.bind(this));
+        }
+    }
+
+    onClickRadioBtn(event) {
+        const { value } = event.target;
+        this.filterTodo(value);
+
+    }
+
+    filterTodo(status) {
+        const todoDivEls = this.todoListEl.querySelectorAll('div.todo');
+        for( const todoDivEl of todoDivEls) {
+            switch(status) {
+                case 'ALL':
+                    todoDivEl.style.display = 'flex';
+                    break;
+                case 'DONE':
+                    todoDivEl.style.display = todoDivEl.classList.contains('done') ? 'flex': 'none';
+                    break;
+                case 'TODO':
+                    todoDivEl.style.display = todoDivEl.classList.contains('done') ? 'none': 'flex';
+                    break;
+            }
+        }
     }
 
     onClickTodoList(event) {
