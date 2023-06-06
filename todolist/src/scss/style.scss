@@ -70,18 +70,18 @@
         justify-content: space-between;
         align-items: center;
   
-        // !
+        // !ease 바뀌는 속도를 느렸다 빨랐다 효과
         transition: 1s ease;
   
         .todo-item {
-          // !
+          // !flex 배열의 비율 지정(flex-glow)
           flex-grow: 1;
           border: none;
           font-size: 1.5rem;
           outline: none;
           padding: 0rem 0.5rem;
   
-          // !
+          // !크기를 넘어가면 입력시 스크롤되도록
           overflow-x: scroll;
           white-space: nowrap;
         }
@@ -187,7 +187,7 @@
     }
   }
   
-  //!
+  //!800px 이하일때 적용
   @media (max-width: 800px) {
     .input-container {
       width: 100%;
